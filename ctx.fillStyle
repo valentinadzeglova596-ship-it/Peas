@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Ali AI Video Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #050505; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .preview-box { width: 360px; height: 640px; background: #000; border: 4px solid #222; position: relative; overflow: hidden; }
+        canvas { width: 100%; height: 100%; }
+        .gradient-btn { background: linear-gradient(90deg, #ff0050, #00f2ea); transition: 0.3s; }
+        .gradient-btn:hover { opacity: 0.8; transform: scale(1.02); }
+    </style>
+</head>
+<body class="flex flex-col items-center py-10">
+
+    <h1 class="text-4xl font-black mb-2 tracking-tighter uppercase">Ali <span class="text-red-600">Video</span> Creator</h1>
+    <p class="text-gray-500 mb-8 italic text-sm">Згенеруй відео та завантаж його для YouTube Shorts</p>
+
+    <div class="flex flex-col md:flex-row gap-10 items-start">
+        
+        <!-- Preview -->
+        <div class="flex flex-col items-center">
+            <div class="preview-box rounded-3xl shadow-2xl" id="container">
+                <canvas id="videoCanvas" width="720" height="1280"></canvas>
+            </div>
+            <p class="mt-4 text-xs text-gray-600 uppercase tracking-widest font-bold">Попередній перегляд (9:16)</p>
+        </div>
+
+        <!-- Controls -->
+        <div class="w-full max-w-sm space-y-6">
+            <div class="bg-[#111] p-6 rounded-2xl border border-gray-800">
+                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase">Текст для відео</label>
+                <input id="videoText" type="text" value="ПІДПИШИСЬ НА КАНАЛ!" class="w-full bg-black border border-gray-700 rounded-lg p-3 text-white focus:border-cyan-400 outline-none">
+                
+                <label class="block text-xs font-bold text-gray-400 mt-6 mb-2 uppercase">Колір ефектів</label>
+                <input id="colorTone" type="color" value="#ff0050" class="w-full h-10 bg-black border border-gray-700 rounded-lg cursor-pointer">
+                
+                <div class="mt-8 space-y-3">
+                    <button onclick="previewVideo()" class="w-full py-4 border border-gray-600 rounded-xl font-bold hover:bg-white hover:text-black transition">ПЕРЕГЛЯНУТИ</button>
+                    <button id="downloadBtn" onclick="recordVideo()" class="w-full py-4 gradient-btn rounded-xl font-black text-black">ЗГЕНЕРУВАТИ ТА СКАЧАТИ</button>
+                </div>
+            </div>
+
+            <div class="text-sm text-gray-400 leading-relaxed bg-blue-900/10 p-4 rounded-xl border border-blue-900/30">
+                🤖 <b>Порада від AI:</b> Використовуй яскраві кольори та короткі фрази капсом, щоб відео залетіло в рекомендації YouTube.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('videoCanvas');
+        const ctx = canvas.getContext('2d');
+        let animationId;
+
+        function draw(time) {
+            const text = document.getElementById('videoText').value;
+            const color = document.getElementById('colorTone').value;
+
+            // Фон
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Анімовані частинки
+            for(let i=0; i<20; i++) {
+                ctx.fillStyle = color;
+                const y = (time / 2 + i * 100) % canvas.height;
+                ctx.globalAlpha = 0.3;
+                ctx.beginPath();
+                ctx.arc(Math.sin(time/500 + i) * 200 + 360, y, 50, 0, Math.PI*2);
+                ctx.fill();
+            }
+
+            // Текст
+            ctx.globalAlpha = 1.0;
+            ctx.fillStyle = "#fff";
+            ctx.font = "bold 80px Inter, sans-serif";
+            ctx.textAlign = "center";
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = color;
+            ctx.fillText(text, canvas.width/2, canvas.height/2);
+            
+            ctx.font = "30px Inter";
+            ctx.fillText("ALI AI GENERATOR", canvas.width/2, canvas.height - 100);
+
+            animationId = requestAnimationFrame(draw);
+        }
+
+        function previewVideo() {
+            cancelAnimationFrame(animationId);
+            requestAnimationFrame(draw);
+        }
+
+        async function recordVideo() {
+            const stream = canvas.captureStream(30);
+            const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+            const chunks = [];
+
+            recorder.ondataavailable = e => chunks.push(e.data);
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'ali-ai-video.webm';
+                a.click();
+            };
+
+            recorder.start();
+            document.getElementById('downloadBtn').innerText = "ЗАПИСУЮ (5 СЕК)...";
+            
+            setTimeout(() => {
+                recorder.stop();
+                document.getElementById('downloadBtn').innerText = "ЗГЕНЕРУВАТИ ТА СКАЧАТИ";
+            }, 5000);
+        }
+
+        // Початковий запуск
+        previewVideo();
+    </script>
+</body>
+</html>
+
