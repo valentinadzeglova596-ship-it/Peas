@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Ali AI Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-black text-white p-5 text-center">
+
+    <h1 class="text-3xl font-bold text-red-600 mb-5">ALI VIDEO STUDIO</h1>
+
+    <!-- БЛОК КАРТИНОК (Прямі лінки) -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10 max-w-4xl mx-auto">
+        <div class="bg-zinc-900 p-3 rounded-xl">
+            <img src="https://images.unsplash.com" class="rounded-lg w-full h-40 object-cover" alt="YouTube">
+            <p class="mt-2 text-sm italic">Картинка 1: YouTube PRO</p>
+        </div>
+        <div class="bg-zinc-900 p-3 rounded-xl">
+            <img src="https://images.unsplash.com" class="rounded-lg w-full h-40 object-cover" alt="Cinema">
+            <p class="mt-2 text-sm italic">Картинка 2: Монтаж відео</p>
+        </div>
+    </div>
+
+    <!-- ГЕНЕРАТОР -->
+    <div class="bg-zinc-900 p-8 rounded-3xl max-w-sm mx-auto border border-zinc-800">
+        <canvas id="c" width="300" height="500" class="bg-black rounded-lg border-2 border-red-600 mx-auto"></canvas>
+        <input id="t" type="text" value="ALI AI VIDEO" class="w-full mt-4 p-2 bg-black border border-gray-700 text-center">
+        <button onclick="rec()" id="b" class="w-full mt-4 bg-red-600 p-3 rounded-lg font-bold">СКАЧАТИ ВІДЕО</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        const input = document.getElementById('t');
+
+        function draw() {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(0,0,300,500);
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(150 + Math.sin(Date.now()/500)*50, 250, 40, 0, Math.PI*2);
+            ctx.fill();
+            ctx.fillStyle = 'white';
+            ctx.font = '30px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(input.value, 150, 260);
+            requestAnimationFrame(draw);
+        }
+        draw();
+
+        async function rec() {
+            const btn = document.getElementById('b');
+            const stream = canvas.captureStream(30);
+            const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+            const chunks = [];
+            recorder.ondataavailable = e => chunks.push(e.data);
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'ali_video.webm';
+                a.click();
+                btn.innerText = "СКАЧАТИ ВІДЕО";
+            };
+            recorder.start();
+            btn.innerText = "ЗАПИС (3 СЕК)...";
+            setTimeout(() => recorder.stop(), 3000);
+        }
+    </script>
+</body>
+</html>
