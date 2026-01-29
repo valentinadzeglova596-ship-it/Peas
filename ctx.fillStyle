@@ -2,48 +2,45 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Ali AI Video Generator</title>
+    <title>Ali AI Studio Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #050505; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .preview-box { width: 360px; height: 640px; background: #000; border: 4px solid #222; position: relative; overflow: hidden; }
+        body { background: #050505; color: white; font-family: sans-serif; }
+        .canvas-container { width: 320px; height: 568px; background: #000; border: 4px solid #333; position: relative; border-radius: 20px; overflow: hidden; }
         canvas { width: 100%; height: 100%; }
-        .gradient-btn { background: linear-gradient(90deg, #ff0050, #00f2ea); transition: 0.3s; }
-        .gradient-btn:hover { opacity: 0.8; transform: scale(1.02); }
+        .video-card img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; display: block; }
     </style>
 </head>
-<body class="flex flex-col items-center py-10">
+<body class="p-5 md:p-10 flex flex-col items-center">
 
-    <h1 class="text-4xl font-black mb-2 tracking-tighter uppercase">Ali <span class="text-red-600">Video</span> Creator</h1>
-    <p class="text-gray-500 mb-8 italic text-sm">Згенеруй відео та завантаж його для YouTube Shorts</p>
+    <h1 class="text-3xl font-black text-red-600 mb-8 uppercase tracking-tighter">Ali AI Video Generator</h1>
 
-    <div class="flex flex-col md:flex-row gap-10 items-start">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-6xl w-full">
         
-        <!-- Preview -->
-        <div class="flex flex-col items-center">
-            <div class="preview-box rounded-3xl shadow-2xl" id="container">
+        <!-- ГЕНЕРАТОР ВІДЕО -->
+        <div class="flex flex-col items-center bg-[#111] p-6 rounded-3xl border border-gray-800 shadow-2xl">
+            <h2 class="mb-4 font-bold text-gray-400">ПАНЕЛЬ МОНТАЖУ (9:16)</h2>
+            <div class="canvas-container">
                 <canvas id="videoCanvas" width="720" height="1280"></canvas>
             </div>
-            <p class="mt-4 text-xs text-gray-600 uppercase tracking-widest font-bold">Попередній перегляд (9:16)</p>
+            <input id="videoText" type="text" value="ПІДПИШИСЬ!" class="mt-4 w-full bg-black border border-gray-700 p-3 rounded-lg text-center font-bold">
+            <button onclick="recordAndDownload()" id="recBtn" class="mt-4 w-full bg-red-600 py-4 rounded-xl font-black hover:bg-red-700 transition uppercase">
+                Згенерувати та Скачати
+            </button>
         </div>
 
-        <!-- Controls -->
-        <div class="w-full max-w-sm space-y-6">
-            <div class="bg-[#111] p-6 rounded-2xl border border-gray-800">
-                <label class="block text-xs font-bold text-gray-400 mb-2 uppercase">Текст для відео</label>
-                <input id="videoText" type="text" value="ПІДПИШИСЬ НА КАНАЛ!" class="w-full bg-black border border-gray-700 rounded-lg p-3 text-white focus:border-cyan-400 outline-none">
-                
-                <label class="block text-xs font-bold text-gray-400 mt-6 mb-2 uppercase">Колір ефектів</label>
-                <input id="colorTone" type="color" value="#ff0050" class="w-full h-10 bg-black border border-gray-700 rounded-lg cursor-pointer">
-                
-                <div class="mt-8 space-y-3">
-                    <button onclick="previewVideo()" class="w-full py-4 border border-gray-600 rounded-xl font-bold hover:bg-white hover:text-black transition">ПЕРЕГЛЯНУТИ</button>
-                    <button id="downloadBtn" onclick="recordVideo()" class="w-full py-4 gradient-btn rounded-xl font-black text-black">ЗГЕНЕРУВАТИ ТА СКАЧАТИ</button>
-                </div>
+        <!-- ГАЛЕРЕЯ (КАРТИНКИ ТЕПЕР ПРАЦЮЮТЬ) -->
+        <div class="space-y-6">
+            <h2 class="text-xl font-bold border-l-4 border-red-600 pl-3 uppercase">Твої проєкти</h2>
+            
+            <div class="video-card bg-[#111] p-4 rounded-2xl border border-gray-800">
+                <img src="https://plus.unsplash.com" alt="Tech">
+                <h3 class="mt-3 font-bold">Як Алі створює контент</h3>
             </div>
 
-            <div class="text-sm text-gray-400 leading-relaxed bg-blue-900/10 p-4 rounded-xl border border-blue-900/30">
-                🤖 <b>Порада від AI:</b> Використовуй яскраві кольори та короткі фрази капсом, щоб відео залетіло в рекомендації YouTube.
+            <div class="video-card bg-[#111] p-4 rounded-2xl border border-gray-800">
+                <img src="https://images.unsplash.com" alt="YouTube">
+                <h3 class="mt-3 font-bold">Секрети YouTube Shorts 2026</h3>
             </div>
         </div>
     </div>
@@ -51,47 +48,36 @@
     <script>
         const canvas = document.getElementById('videoCanvas');
         const ctx = canvas.getContext('2d');
-        let animationId;
+        const textInput = document.getElementById('videoText');
 
-        function draw(time) {
-            const text = document.getElementById('videoText').value;
-            const color = document.getElementById('colorTone').value;
-
+        function animate(time) {
             // Фон
             ctx.fillStyle = '#000';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Анімовані частинки
-            for(let i=0; i<20; i++) {
-                ctx.fillStyle = color;
-                const y = (time / 2 + i * 100) % canvas.height;
-                ctx.globalAlpha = 0.3;
+            // Ефекти (кружальця)
+            for(let i=0; i<15; i++) {
+                ctx.fillStyle = `hsl(${(time/10 + i*20)%360}, 70%, 50%)`;
                 ctx.beginPath();
-                ctx.arc(Math.sin(time/500 + i) * 200 + 360, y, 50, 0, Math.PI*2);
+                const x = Math.sin(time/1000 + i) * 300 + 360;
+                const y = (time/2 + i*150) % canvas.height;
+                ctx.arc(x, y, 40, 0, Math.PI*2);
                 ctx.fill();
             }
 
-            // Текст
-            ctx.globalAlpha = 1.0;
-            ctx.fillStyle = "#fff";
-            ctx.font = "bold 80px Inter, sans-serif";
+            // Текст Алі
+            ctx.fillStyle = "white";
+            ctx.font = "bold 90px sans-serif";
             ctx.textAlign = "center";
-            ctx.shadowBlur = 20;
-            ctx.shadowColor = color;
-            ctx.fillText(text, canvas.width/2, canvas.height/2);
-            
-            ctx.font = "30px Inter";
-            ctx.fillText("ALI AI GENERATOR", canvas.width/2, canvas.height - 100);
+            ctx.shadowBlur = 30;
+            ctx.shadowColor = "red";
+            ctx.fillText(textInput.value, canvas.width/2, canvas.height/2);
 
-            animationId = requestAnimationFrame(draw);
+            requestAnimationFrame(animate);
         }
 
-        function previewVideo() {
-            cancelAnimationFrame(animationId);
-            requestAnimationFrame(draw);
-        }
-
-        async function recordVideo() {
+        async function recordAndDownload() {
+            const btn = document.getElementById('recBtn');
             const stream = canvas.captureStream(30);
             const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
             const chunks = [];
@@ -101,23 +87,16 @@
                 const blob = new Blob(chunks, { type: 'video/webm' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href = url;
-                a.download = 'ali-ai-video.webm';
-                a.click();
+                a.href = url; a.download = 'ali_video.webm'; a.click();
+                btn.innerText = "Згенерувати та Скачати";
             };
 
             recorder.start();
-            document.getElementById('downloadBtn').innerText = "ЗАПИСУЮ (5 СЕК)...";
-            
-            setTimeout(() => {
-                recorder.stop();
-                document.getElementById('downloadBtn').innerText = "ЗГЕНЕРУВАТИ ТА СКАЧАТИ";
-            }, 5000);
+            btn.innerText = "Записую (5 сек)...";
+            setTimeout(() => recorder.stop(), 5000);
         }
 
-        // Початковий запуск
-        previewVideo();
+        animate(0);
     </script>
 </body>
 </html>
-
