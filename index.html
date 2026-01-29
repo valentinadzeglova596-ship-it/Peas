@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мій AI Сайт</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #0d1117; color: white; font-family: 'Inter', sans-serif; }
+        .gradient-border {
+            background: linear-gradient(90deg, #3fb1ff, #bc3eff);
+            padding: 2px;
+            border-radius: 15px;
+        }
+        .card { background: #161b22; border-radius: 13px; padding: 2rem; }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-6">
+
+    <div class="max-w-2xl w-full">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-2">
+                Ласкаво просимо на мій сайт!
+            </h1>
+            <p class="text-gray-400">Цей сайт працює безкоштовно на GitHub Pages</p>
+        </header>
+
+        <div class="gradient-border">
+            <div class="card">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-2xl shadow-lg shadow-blue-500/50 mr-4">
+                        🤖
+                    </div>
+                    <h2 class="text-2xl font-semibold">Ваш AI Асистент</h2>
+                </div>
+                
+                <p class="text-gray-300 leading-relaxed">
+                    Привіт! Я — твій інтелектуальний помічник, інтегрований у цей сайт. 
+                    На цьому ресурсі я відповідаю за:
+                </p>
+                
+                <ul class="mt-4 space-y-2 text-gray-400">
+                    <li class="flex items-center">✅ <span class="ml-2 italic">Написання та виправлення коду в реальному часі</span></li>
+                    <li class="flex items-center">✅ <span class="ml-2 italic">Пояснення складних концепцій простою мовою</span></li>
+                    <li class="flex items-center">✅ <span class="ml-2 italic">Автоматизацію рутинних завдань на GitHub</span></li>
+                </ul>
+
+                <button class="mt-8 w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 rounded-lg font-bold transition-all transform hover:scale-105">
+                    Давай працювати разом!
+                </button>
+            </div>
+        </div>
+
+        <footer class="text-center mt-8 text-sm text-gray-500">
+            Зроблено з ❤️ та ШІ
+        </footer>
+    </div>
+
+</body>
+</html>
