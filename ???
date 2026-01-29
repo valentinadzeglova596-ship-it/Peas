@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Vision Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background: #0f0f0f; color: white; font-family: 'Roboto', sans-serif; }
+        .video-card { background: #1e1e1e; border-radius: 12px; overflow: hidden; transition: 0.3s; cursor: pointer; }
+        .video-card:hover { background: #2d2d2d; transform: translateY(-5px); }
+        .ai-badge { background: linear-gradient(90deg, #00c6ff, #0072ff); padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
+        .sidebar { background: #0f0f0f; width: 240px; height: 100vh; position: fixed; left: 0; top: 0; padding: 20px; border-right: 1px solid #333; }
+        .main-content { margin-left: 260px; padding: 20px; }
+    </style>
+</head>
+<body>
+
+    <!-- Бокова панель -->
+    <div class="sidebar hidden md:block">
+        <h1 class="text-2xl font-bold text-red-600 mb-8 flex items-center">
+            <span class="mr-2">👁️</span> AI-Vision
+        </h1>
+        <nav class="space-y-4 text-gray-400">
+            <div class="text-white font-bold flex items-center">🏠 Головна</div>
+            <div class="hover:text-white cursor-pointer">🔥 Популярне</div>
+            <div class="hover:text-white cursor-pointer">📂 Мої розробки</div>
+            <hr class="border-gray-800">
+            <div class="text-xs uppercase text-gray-500">Твій асистент</div>
+            <div id="ai-status" class="text-green-500 text-sm">● AI System Online</div>
+        </nav>
+    </div>
+
+    <!-- Основна частина -->
+    <div class="main-content">
+        <!-- Пошукова стрічка (Перевірка) -->
+        <div class="flex max-w-2xl mx-auto mb-10">
+            <input id="ai-input" type="text" placeholder="Запитай AI про це відео..." class="w-full bg-[#121212] border border-gray-700 rounded-l-full py-2 px-6 focus:outline-none focus:border-blue-500">
+            <button onclick="checkVideo()" class="bg-gray-700 px-6 rounded-r-full hover:bg-gray-600 transition">Перевірити</button>
+        </div>
+
+        <!-- Повідомлення від мене -->
+        <div id="ai-response" class="hidden max-w-2xl mx-auto mb-8 p-4 bg-blue-900/30 border border-blue-500 rounded-lg text-blue-200 text-sm">
+            <!-- Тут з'явиться моя відповідь -->
+        </div>
+
+        <!-- Сітка "відео" -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Відео 1 -->
+            <div class="video-card" onclick="playVideo('Як я створив цей сайт безкоштовно')">
+                <div class="h-44 bg-gradient-to-br from-blue-900 to-black flex items-center justify-center text-5xl">💻</div>
+                <div class="p-4">
+                    <span class="ai-badge uppercase">Перевірено AI</span>
+                    <h3 class="font-bold mt-2">Як запустити GitHub Pages за 5 хвилин</h3>
+                    <p class="text-gray-400 text-xs mt-1">AI-Асистент • 1.2 млн переглядів</p>
+                </div>
+            </div>
+
+            <!-- Відео 2 -->
+            <div class="video-card" onclick="playVideo('Секрети програмування 2026')">
+                <div class="h-44 bg-gradient-to-br from-purple-900 to-black flex items-center justify-center text-5xl">🚀</div>
+                <div class="p-4">
+                    <span class="ai-badge uppercase text-white">Top Rated</span>
+                    <h3 class="font-bold mt-2">Майбутнє коду: Нейромережі замість клавіатур</h3>
+                    <p class="text-gray-400 text-xs mt-1">Tech Trends • 800 тис. переглядів</p>
+                </div>
+            </div>
+
+            <!-- Відео 3 -->
+            <div class="video-card" onclick="playVideo('Музика для концентрації')">
+                <div class="h-44 bg-gradient-to-br from-green-900 to-black flex items-center justify-center text-5xl">🎧</div>
+                <div class="p-4">
+                    <span class="ai-badge uppercase">Relax Mode</span>
+                    <h3 class="font-bold mt-2">Lo-Fi для успішного деплою</h3>
+                    <p class="text-gray-400 text-xs mt-1">AI Beats • 50 тис. переглядів</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function checkVideo() {
+            const input = document.getElementById('ai-input').value;
+            const responseBox = document.getElementById('ai-response');
+            
+            if (input.trim() === "") {
+                alert("Введи запит для перевірки!");
+                return;
+            }
+
+            responseBox.classList.remove('hidden');
+            responseBox.innerHTML = "<b>Аналізую запит...</b>";
+
+            setTimeout(() => {
+                responseBox.innerHTML = `🤖 <b>Мій вердикт:</b> Запит "${input}" оброблено. Це відео безпечне та містить 98% корисного коду. Рекомендую до перегляду!`;
+            }, 1000);
+        }
+
+        function playVideo(title) {
+            alert("Відтворюю: " + title + "\n\n(Це демо-версія вашого власного YouTube!)");
+        }
+    </script>
+</body>
+</html>
